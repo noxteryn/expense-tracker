@@ -11,11 +11,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // Then invoke the exposed APIs of the container.
 // You can invoke the APIs using Postman.
 
-// Expense tracking requires:
-// 1. Amount of expenditure. Type: Currency
-// 2. Date of expenditure. Type: Date
-// 3. Purpose of expenditure. Type: String
-
 @SpringBootApplication
 public class ExpenseTrackerApplication
 {
