@@ -1,8 +1,12 @@
 package com.github.noxteryn.expensetracker.service;
 
 import com.github.noxteryn.expensetracker.model.Expense;
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.sql.Date;
+import java.util.List;
 
-public interface ExpenseService extends JpaRepository<Expense, Long>
+public interface ExpenseService
 {
+	Expense findExpenseById(Long id);
+	List<Expense> findByDate(Date date);
+	List<Expense> findByDateRange(Date startDate, Date endDate);
 }

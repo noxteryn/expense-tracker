@@ -1,36 +1,83 @@
 package com.github.noxteryn.expensetracker.controller;
 
+import com.github.noxteryn.expensetracker.exception.ExpenseNotFoundException;
 import com.github.noxteryn.expensetracker.model.Expense;
+import com.github.noxteryn.expensetracker.repository.ExpenseRepository;
 import com.github.noxteryn.expensetracker.service.ExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-import java.util.*;
+import org.springframework.web.server.ResponseStatusException;
+import java.sql.Date;
+import java.util.List;
 
 @RestController
 public class ExpenseController
 {
+	private ExpenseService expenseService;
+	private final ExpenseRepository expenseRepository;
+	public ExpenseController(ExpenseRepository expenseRepository)
+	{
+		this.expenseRepository = expenseRepository;
+	}
 	@Autowired
-	ExpenseService expenseService;
+	public void setExpenseService(ExpenseService expenseService)
+	{
+		this.expenseService = expenseService;
+	}
 	@PostMapping("/expense")
 	@ResponseStatus(HttpStatus.CREATED)
-	Expense create(@RequestBody Expense expense)
+	public Expense create(@RequestBody Expense expense)
 	{
-		return expenseService.save(expense);
+		return expenseRepository.save(expense);
 	}
 	@GetMapping("/expense")
-	List<Expense> read()
+	public ResponseEntity<List<Expense>> read()
 	{
-		return expenseService.findAll();
+		List<Expense> list = expenseRepository.findAll();
+		return new ResponseEntity<>(list, HttpStatus.OK);
+	}
+	@GetMapping("/expense/{id}")
+	public ResponseEntity<Expense> getExpenseById(@PathVariable("id") Long id)
+	{
+		try
+		{
+			return new ResponseEntity<>(expenseService.findExpenseById(id), HttpStatus.FOUND);
+		}
+		catch (ExpenseNotFoundException exception)
+		{
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Expense not found.");
+		}
+	}
+	@GetMapping("/expense/date/{date}")
+	@ResponseStatus(HttpStatus.OK)
+	public List<Expense> getExpenseByDate(@PathVariable("date") Date date)
+	{
+		return expenseService.findByDate(date);
+	}
+	@GetMapping("/expense/search")
+	@ResponseStatus(HttpStatus.OK)
+	public List<Expense> getExpensesByDateRange(@RequestParam("startDate") Date startDate, @RequestParam("endDate") Date endDate)
+	{
+		return expenseService.findByDateRange(startDate, endDate);
 	}
 	@PutMapping("/expense")
-	Expense update(@RequestBody Expense expense)
+	@ResponseStatus(HttpStatus.OK)
+	public Expense update(@RequestBody Expense expense)
 	{
-		return expenseService.save(expense);
+		return expenseRepository.save(expense);
 	}
 	@DeleteMapping("/expense/{id}")
-	void delete(@PathVariable Long id)
+	@ResponseStatus(HttpStatus.OK)
+	public void delete(@PathVariable("id") Long id)
 	{
-		expenseService.deleteById(id);
+		try
+		{
+			expenseRepository.deleteById(id);
+		}
+		catch (ExpenseNotFoundException exception)
+		{
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Expense not found.");
+		}
 	}
 }
