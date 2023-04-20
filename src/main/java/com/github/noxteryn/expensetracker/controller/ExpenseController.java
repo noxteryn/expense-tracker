@@ -25,12 +25,14 @@ public class ExpenseController
 	{
 		this.expenseService = expenseService;
 	}
+
 	@PostMapping("/expense")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Expense create(@RequestBody Expense expense)
 	{
 		return expenseRepository.save(expense);
 	}
+
 	@GetMapping("/expense")
 	public ResponseEntity<List<Expense>> read()
 	{
@@ -57,16 +59,18 @@ public class ExpenseController
 	}
 	@GetMapping("/expense/search")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Expense> getExpensesByDateRange(@RequestParam("startDate") Date startDate, @RequestParam("endDate") Date endDate)
+	public List<Expense> getExpensesByDateRange(@RequestParam("startDate") Date startDate, @RequestParam(value = "endDate", required = false) Date endDate)
 	{
 		return expenseService.findByDateRange(startDate, endDate);
 	}
+
 	@PutMapping("/expense")
 	@ResponseStatus(HttpStatus.OK)
 	public Expense update(@RequestBody Expense expense)
 	{
 		return expenseRepository.save(expense);
 	}
+
 	@DeleteMapping("/expense/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public void delete(@PathVariable("id") Long id)

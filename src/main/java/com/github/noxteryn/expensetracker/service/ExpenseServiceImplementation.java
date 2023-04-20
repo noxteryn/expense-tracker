@@ -6,6 +6,7 @@ import com.github.noxteryn.expensetracker.repository.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +34,15 @@ public class ExpenseServiceImplementation implements ExpenseService
 	}
 	public List<Expense> findByDateRange(Date startDate, Date endDate)
 	{
-		return expenseRepository.findByDateBetween(startDate, endDate);
+		if (endDate == null)
+		{
+			LocalDate currentDate = LocalDate.now();
+			Date date2 = Date.valueOf(currentDate);
+			return expenseRepository.findByDateBetween(startDate, date2);
+		}
+		else
+		{
+			return expenseRepository.findByDateBetween(startDate, endDate);
+		}
 	}
-
 }
