@@ -15,6 +15,12 @@ public class ExpenseServiceImplementation implements ExpenseService
 {
 	@Autowired
 	private ExpenseRepository expenseRepository;
+
+	@Override
+	public List<Expense> findAllExpenses()
+	{
+		return expenseRepository.findAll();
+	}
 	@Override
 	public Expense findExpenseById(Long id)
 	{
@@ -28,10 +34,12 @@ public class ExpenseServiceImplementation implements ExpenseService
 			throw new ExpenseNotFoundException("Expense not found.");
 		}
 	}
+	@Override
 	public List<Expense> findByDate(Date date)
 	{
 		return expenseRepository.findByDate(date);
 	}
+	@Override
 	public List<Expense> findByDateRange(Date startDate, Date endDate)
 	{
 		if (endDate == null)

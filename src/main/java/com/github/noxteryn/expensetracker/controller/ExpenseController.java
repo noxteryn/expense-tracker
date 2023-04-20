@@ -36,7 +36,7 @@ public class ExpenseController
 	@GetMapping("/expense")
 	public ResponseEntity<List<Expense>> read()
 	{
-		List<Expense> list = expenseRepository.findAll();
+		List<Expense> list = expenseService.findAllExpenses();
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 	@GetMapping("/expense/{id}")

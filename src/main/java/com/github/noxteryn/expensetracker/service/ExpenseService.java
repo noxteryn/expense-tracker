@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface ExpenseService
 {
+	List<Expense> findAllExpenses();
 	Expense findExpenseById(Long id);
 	List<Expense> findByDate(Date date);
 	List<Expense> findByDateRange(Date startDate, Date endDate);
