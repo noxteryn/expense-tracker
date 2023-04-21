@@ -1,3 +1,3 @@
-FROM openjdk:8-jdk-alpine
+FROM openjdk:19.0.1-jdk
 COPY target/expense-tracker-0.0.1-SNAPSHOT.jar /app.jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]
