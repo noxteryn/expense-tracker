@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: expense-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: expense
+  template:
+    metadata:
+      labels:
+        app: expense
+    spec:
+      containers:
+        - name: expense
+          image: noxteryn/expense-tracker:container
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DATABASE_URL
+              value: jdbc:mysql://localhost/etdb
