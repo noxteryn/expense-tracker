@@ -30,7 +30,7 @@ public class ExpenseController
 	@ResponseStatus(HttpStatus.CREATED)
 	public Expense create(@RequestBody Expense expense)
 	{
-		return expenseRepository.save(expense);
+		return expenseService.newExpense(expense);
 	}
 
 	@GetMapping("/expense")
@@ -68,7 +68,7 @@ public class ExpenseController
 	@ResponseStatus(HttpStatus.OK)
 	public Expense update(@RequestBody Expense expense)
 	{
-		return expenseRepository.save(expense);
+		return expenseService.editExpense(expense);
 	}
 
 	@DeleteMapping("/expense/{id}")
@@ -77,7 +77,7 @@ public class ExpenseController
 	{
 		try
 		{
-			expenseRepository.deleteById(id);
+			expenseService.deleteById(id);
 		}
 		catch (ExpenseNotFoundException exception)
 		{

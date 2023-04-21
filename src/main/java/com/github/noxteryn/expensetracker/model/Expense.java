@@ -1,5 +1,6 @@
 package com.github.noxteryn.expensetracker.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
@@ -12,6 +13,7 @@ public class Expense
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private BigDecimal money;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date date;
 	private String text;
 	public Expense()

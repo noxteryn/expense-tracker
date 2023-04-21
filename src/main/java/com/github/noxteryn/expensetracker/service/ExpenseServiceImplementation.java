@@ -17,6 +17,16 @@ public class ExpenseServiceImplementation implements ExpenseService
 	private ExpenseRepository expenseRepository;
 
 	@Override
+	public Expense newExpense(Expense expense)
+	{
+		return expenseRepository.save(expense);
+	}
+	@Override
+	public Expense editExpense(Expense expense)
+	{
+		return expenseRepository.save(expense);
+	}
+	@Override
 	public List<Expense> findAllExpenses()
 	{
 		return expenseRepository.findAll();
@@ -52,5 +62,11 @@ public class ExpenseServiceImplementation implements ExpenseService
 		{
 			return expenseRepository.findByDateBetween(startDate, endDate);
 		}
+	}
+
+	@Override
+	public void deleteById(Long id)
+	{
+		expenseRepository.deleteById(id);
 	}
 }
