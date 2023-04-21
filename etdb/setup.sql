@@ -1,0 +1,4 @@
+CREATE DATABASE etdb;
+CREATE USER 'noxteryn'@'%' IDENTIFIED BY 'potato';
+GRANT ALL PRIVILEGES ON etdb.* TO 'noxteryn'@'%';
+FLUSH PRIVILEGES;

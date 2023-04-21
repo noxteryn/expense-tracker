@@ -1,0 +1,10 @@
+FROM mysql:latest
+
+ENV MYSQL_ROOT_PASSWORD = noxteryn
+ENV MYSQL_DATABASE = etdb
+ENV MYSQL_USER = noxteryn
+ENV MYSQL_PASSWORD = potato
+
+ADD setup.sql /docker-entrypoint-initdb.d
+
+EXPOSE 3306
