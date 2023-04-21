@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: expense-service
+  name: mysql-service
 spec:
   selector:
-    app: expense
+    app: mysql
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8080
-  type: LoadBalancer
+    - name: mysql-port
+      protocol: TCP
+      port: 3306
+      targetPort: 3306
