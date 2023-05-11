@@ -4,8 +4,8 @@ import com.github.noxteryn.expensetracker.exception.ExpenseNotFoundException;
 import com.github.noxteryn.expensetracker.model.Expense;
 import com.github.noxteryn.expensetracker.repository.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -22,9 +22,12 @@ public class ExpenseServiceImplementation implements ExpenseService
 		return expenseRepository.save(expense);
 	}
 	@Override
-	public Expense editExpense(Expense expense)
+	public ResponseEntity<Expense> editExpense(Long id, Expense oldExpense, Expense newExpense)
 	{
-		return expenseRepository.save(expense);
+		oldExpense.setMoney(newExpense.getMoney());
+		oldExpense.setDate(newExpense.getDate());
+		oldExpense.setText(newExpense.getText());
+		return ResponseEntity.ok(expenseRepository.save(oldExpense));
 	}
 	@Override
 	public List<Expense> findAllExpenses()
@@ -45,18 +48,17 @@ public class ExpenseServiceImplementation implements ExpenseService
 		}
 	}
 	@Override
-	public List<Expense> findByDate(Date date)
+	public List<Expense> findByDate(LocalDate date)
 	{
 		return expenseRepository.findByDate(date);
 	}
 	@Override
-	public List<Expense> findByDateRange(Date startDate, Date endDate)
+	public List<Expense> findByDateRange(LocalDate startDate, LocalDate endDate)
 	{
 		if (endDate == null)
 		{
 			LocalDate currentDate = LocalDate.now();
-			Date date2 = Date.valueOf(currentDate);
-			return expenseRepository.findByDateBetween(startDate, date2);
+			return expenseRepository.findByDateBetween(startDate, currentDate);
 		}
 		else
 		{
@@ -65,8 +67,17 @@ public class ExpenseServiceImplementation implements ExpenseService
 	}
 
 	@Override
-	public void deleteById(Long id)
+	public ResponseEntity<Void> deleteById(Long id)
 	{
-		expenseRepository.deleteById(id);
+		Optional<Expense> employee = expenseRepository.findById(id);
+		if (employee.isPresent())
+		{
+			expenseRepository.deleteById(id);
+			return ResponseEntity.noContent().build();
+		}
+		else
+		{
+			return ResponseEntity.notFound().build();
+		}
 	}
 }

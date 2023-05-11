@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -44,7 +44,7 @@ public class ExpenseController
 	{
 		try
 		{
-			return new ResponseEntity<>(expenseService.findExpenseById(id), HttpStatus.FOUND);
+			return new ResponseEntity<>(expenseService.findExpenseById(id), HttpStatus.OK);
 		}
 		catch (ExpenseNotFoundException exception)
 		{
@@ -53,35 +53,32 @@ public class ExpenseController
 	}
 	@GetMapping("/expense/date/{date}")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Expense> getExpenseByDate(@PathVariable("date") Date date)
+	public List<Expense> getExpenseByDate(@PathVariable("date") LocalDate date)
 	{
 		return expenseService.findByDate(date);
 	}
 	@GetMapping("/expense/search")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Expense> getExpensesByDateRange(@RequestParam("startDate") Date startDate, @RequestParam(value = "endDate", required = false) Date endDate)
+	public List<Expense> getExpensesByDateRange(@RequestParam("startDate") LocalDate startDate, @RequestParam(value = "endDate", required = false) LocalDate endDate)
 	{
 		return expenseService.findByDateRange(startDate, endDate);
 	}
 
-	@PutMapping("/expense")
-	@ResponseStatus(HttpStatus.OK)
-	public Expense update(@RequestBody Expense expense)
+	@PutMapping("/expense/{id}")
+	public ResponseEntity<Expense> putEmployee(@PathVariable Long id, @RequestBody Expense newEmployee)
 	{
-		return expenseService.editExpense(expense);
+		return expenseService.editExpense(id, expenseService.findExpenseById(id), newEmployee);
 	}
 
 	@DeleteMapping("/expense/{id}")
-	@ResponseStatus(HttpStatus.OK)
-	public void delete(@PathVariable("id") Long id)
+	public ResponseEntity<Void> delete(@PathVariable("id") Long id)
 	{
-		try
-		{
-			expenseService.deleteById(id);
-		}
-		catch (ExpenseNotFoundException exception)
-		{
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Expense not found.");
-		}
+		return expenseService.deleteById(id);
+	}
+
+	@ExceptionHandler(ExpenseNotFoundException.class)
+	public ResponseEntity<String> handleEmployeeNotFoundException(ExpenseNotFoundException exception)
+	{
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
 	}
 }
